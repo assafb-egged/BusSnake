@@ -481,13 +481,13 @@ button.primary {
 
 .splash.show {
   display: flex;
-  animation: splashFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: splashFade 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .splash-logo {
   width: min(58vw, 260px);
   height: min(58vw, 260px);
-  filter: drop-shadow(0 10px 36px rgba(15, 122, 62, 0.45));
+  filter: drop-shadow(0 12px 40px rgba(42, 63, 184, 0.4));
 }
 
 .splash-logo svg {
@@ -497,21 +497,21 @@ button.primary {
 }
 
 .splash.show .splash-logo {
-  animation: logoSpin 1s cubic-bezier(0.35, 0.0, 0.25, 1) forwards;
+  animation: logoSpin 1.5s cubic-bezier(0.35, 0.0, 0.25, 1) forwards;
   transform-origin: center center;
 }
 
 @keyframes logoSpin {
-  0%   { transform: rotate(-90deg) scale(0.25); opacity: 0; }
-  18%  { transform: rotate(20deg)  scale(1.12); opacity: 1; }
-  60%  { transform: rotate(280deg) scale(1.0);  opacity: 1; }
-  82%  { transform: rotate(380deg) scale(1.05); opacity: 0.85; }
-  100% { transform: rotate(450deg) scale(0.35); opacity: 0; }
+  0%   { transform: rotate(-90deg) scale(0.2);  opacity: 0; }
+  15%  { transform: rotate(40deg)  scale(1.12); opacity: 1; }
+  55%  { transform: rotate(260deg) scale(1.0);  opacity: 1; }
+  78%  { transform: rotate(400deg) scale(1.04); opacity: 0.9; }
+  100% { transform: rotate(520deg) scale(0.3);  opacity: 0; }
 }
 
 @keyframes splashFade {
   0%   { opacity: 0; background-color: #ffffff; }
-  12%  { opacity: 1; background-color: #ffffff; }
+  10%  { opacity: 1; background-color: #ffffff; }
   72%  { opacity: 1; background-color: #ffffff; }
   100% { opacity: 0; background-color: rgba(255, 255, 255, 0); }
 }

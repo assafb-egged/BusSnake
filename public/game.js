@@ -9,7 +9,6 @@
   nameInput.value = savedName;
 
   const overlayJoin = document.getElementById('overlay-join');
-  const overlayDied = document.getElementById('overlay-died');
   const overlayFull = document.getElementById('overlay-full');
   const hud = document.getElementById('hud');
   const hudName = document.getElementById('hud-name');
@@ -20,19 +19,26 @@
   const ctx = canvas.getContext('2d');
 
   const splash = document.getElementById('splash');
+  const SPLASH_DURATION = 1500;
   let splashHideTimer = null;
+  let splashShownAt = 0;
 
   function showSplash() {
     if (!splash) return;
+    // Idempotent: if a splash is already animating, don't restart it.
+    const now = performance.now();
+    if (splashShownAt && now - splashShownAt < SPLASH_DURATION - 200) return;
+    splashShownAt = now;
     if (splashHideTimer) clearTimeout(splashHideTimer);
     splash.classList.remove('show');
-    // Force reflow so the animation restarts even if shown again
+    // Force reflow so the animation restarts cleanly.
     void splash.offsetWidth;
     splash.classList.add('show');
     splashHideTimer = setTimeout(() => {
       splash.classList.remove('show');
       splashHideTimer = null;
-    }, 1000);
+      splashShownAt = 0;
+    }, SPLASH_DURATION);
   }
 
   let socket = null;
@@ -75,7 +81,6 @@
       hudName.textContent = name;
       hudLength.textContent = '4';
       overlayJoin.classList.add('hidden');
-      overlayDied.classList.add('hidden');
       hud.classList.remove('hidden');
       resizeCanvas();
       showSplash();
@@ -90,7 +95,12 @@
         for (const d of s.lastDeaths) {
           deathFlashes.push({ id: d.id, at: performance.now() });
           if (d.id === myId) {
-            overlayDied.classList.remove('hidden');
+            // Auto-respawn: show the splash logo and ask the server for a fresh snake.
+            showSplash();
+            const name = (nameInput.value || 'נוסע').trim().slice(0, 16);
+            if (socket && socket.connected) {
+              socket.emit('respawn', { playerName: name });
+            }
           }
         }
       }
@@ -709,11 +719,6 @@
     if (e.key === 'Enter') document.getElementById('join-btn').click();
   });
 
-  document.getElementById('respawn-btn').addEventListener('click', () => {
-    overlayDied.classList.add('hidden');
-    const name = (nameInput.value || 'נוסע').trim().slice(0, 16);
-    if (socket && socket.connected) socket.emit('respawn', { playerName: name });
-  });
 
   resizeCanvas();
   requestAnimationFrame(render);
