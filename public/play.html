@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0b1220">
+  <title>BusSnake - אגד</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="play-body">
+  <div id="overlay-join" class="overlay">
+    <div class="card">
+      <div class="logo">
+        <span class="bus-emoji">🚌</span>
+        <h1>BusSnake</h1>
+      </div>
+      <p class="subtitle">שלום! זה משחק נחש רב-משתתפים. הנחש שלך הוא אוטובוס שאוסף נוסעים.</p>
+      <p class="bus-tag">אוטובוס: <strong id="bus-label">demo</strong></p>
+      <label for="player-name">השם שלך</label>
+      <input id="player-name" maxlength="16" placeholder="לדוגמה: דנה" autocomplete="off">
+      <button id="join-btn" class="primary">צא לדרך 🚀</button>
+      <p class="hint">טיפ: מקשי חצים במחשב, החלקה (swipe) או הכפתורים בנייד.</p>
+    </div>
+  </div>
+
+  <div id="overlay-died" class="overlay hidden">
+    <div class="card">
+      <h2>💥 התנגשת!</h2>
+      <p>הנוסעים שלך מפוזרים על הכביש. אפשר לנסות שוב.</p>
+      <button id="respawn-btn" class="primary">חזרה למשחק</button>
+    </div>
+  </div>
+
+  <div id="overlay-full" class="overlay hidden">
+    <div class="card">
+      <h2>האוטובוס מלא 🚌</h2>
+      <p>נסה אוטובוס אחר.</p>
+    </div>
+  </div>
+
+  <div id="hud" class="hud hidden">
+    <div class="hud-self">
+      <span class="dot" id="hud-color"></span>
+      <span id="hud-name">-</span>
+      <span class="hud-len">אורך <strong id="hud-length">0</strong></span>
+    </div>
+    <div class="hud-bus">אוטובוס: <strong id="hud-bus">demo</strong></div>
+    <div class="hud-board" id="hud-board"></div>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <div class="touch-pad" id="touch-pad">
+    <button class="pad up" data-dir="up" aria-label="למעלה">▲</button>
+    <button class="pad left" data-dir="left" aria-label="שמאלה">◀</button>
+    <button class="pad right" data-dir="right" aria-label="ימינה">▶</button>
+    <button class="pad down" data-dir="down" aria-label="למטה">▼</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/game.js"></script>
+</body>
+</html>

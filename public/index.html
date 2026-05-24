@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <title>BusSnake - האקתון AI אגד</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="landing">
+    <div class="landing-card">
+      <div class="logo">
+        <span class="bus-emoji">🚌</span>
+        <h1>BusSnake</h1>
+      </div>
+      <p class="tagline">משחק Snake רב-משתתפים לנוסעי אגד.<br>
+        סרקו את הקוד והצטרפו לאוטובוס!</p>
+
+      <div class="qr-wrap">
+        <img id="qr-img" alt="QR code">
+      </div>
+      <p class="qr-url" id="qr-url">טוען...</p>
+
+      <div class="bus-input">
+        <input id="bus-id-input" placeholder="מזהה אוטובוס (לדוגמה: 24A)" maxlength="16">
+        <button id="bus-id-btn">צור QR</button>
+      </div>
+
+      <div class="cta-row">
+        <a id="play-link" href="/play?bus=demo">שחק עכשיו</a>
+        <a class="secondary" id="admin-link" href="/admin" target="_blank">מצב חדרים</a>
+      </div>
+
+      <ul class="feature-list">
+        <li>כל אוטובוס - חדר משחק נפרד</li>
+        <li>הנחש שלך הוא אוטובוס שאוסף נוסעים</li>
+        <li>אכלו שחקנים אחרים כדי לגדול</li>
+        <li>5-15 שחקנים בו-זמנית, עובד מכל סמארטפון</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const busInput = document.getElementById('bus-id-input');
+    const qrImg = document.getElementById('qr-img');
+    const qrUrl = document.getElementById('qr-url');
+    const playLink = document.getElementById('play-link');
+
+    async function loadQr(busId) {
+      const res = await fetch(`/qr?bus=${encodeURIComponent(busId)}`);
+      const data = await res.json();
+      qrImg.src = data.qr;
+      qrUrl.textContent = data.url;
+      playLink.href = `/play?bus=${encodeURIComponent(busId)}`;
+    }
+
+    document.getElementById('bus-id-btn').addEventListener('click', () => {
+      const id = (busInput.value || 'demo').trim() || 'demo';
+      loadQr(id);
+    });
+    busInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('bus-id-btn').click();
+    });
+
+    const params = new URLSearchParams(location.search);
+    const initial = params.get('bus') || 'demo';
+    busInput.value = initial === 'demo' ? '' : initial;
+    loadQr(initial);
+  </script>
+</body>
+</html>
