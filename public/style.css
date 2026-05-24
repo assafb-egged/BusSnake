@@ -383,7 +383,7 @@ button.primary {
   margin: 12px 0 0;
 }
 
-/* ===== Touch controls ===== */
+/* ===== Touch controls (kept LTR so left/right always make sense) ===== */
 .touch-pad {
   position: fixed;
   bottom: calc(env(safe-area-inset-bottom, 12px) + 16px);
@@ -396,6 +396,7 @@ button.primary {
   z-index: 4;
   opacity: 0.85;
   pointer-events: auto;
+  direction: ltr;
 }
 
 .pad {
@@ -423,8 +424,45 @@ button.primary {
 .pad.right { grid-column: 3; grid-row: 2; }
 .pad.down  { grid-column: 2; grid-row: 3; }
 
+/* Hide arrow pad on devices with a precise pointer (mouse) */
 @media (hover: hover) and (pointer: fine) {
   .touch-pad { display: none; }
+}
+
+/* Hide arrow pad on phones too — swipe gestures work, and the canvas needs the space */
+@media (max-width: 768px) {
+  .touch-pad { display: none; }
+}
+
+/* On phones, compact the HUD so the canvas dominates */
+@media (max-width: 768px) {
+  .hud {
+    top: calc(env(safe-area-inset-top, 0px) + 6px);
+    left: 6px;
+    right: 6px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  .hud-self,
+  .hud-bus {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 6px;
+  }
+  .hud-self .dot {
+    width: 9px;
+    height: 9px;
+  }
+  .hud-board {
+    top: calc(env(safe-area-inset-top, 0px) + 42px);
+    padding: 5px 8px;
+    font-size: 10px;
+    max-width: 55vw;
+  }
+  .hud-board .row .dot {
+    width: 8px;
+    height: 8px;
+  }
 }
 
 .hidden { display: none !important; }
