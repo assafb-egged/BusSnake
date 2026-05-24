@@ -9,12 +9,13 @@ const {
 } = require('./constants');
 
 class GameRoom {
-  constructor(busId, onState) {
+  constructor(busId, onState, isSocketConnected) {
     this.busId = busId;
     this.snakes = new Map();
     this.food = [];
     this.colorIndex = 0;
     this.onState = onState;
+    this.isSocketConnected = isSocketConnected || (() => true);
     this.lastDeaths = [];
     for (let i = 0; i < TARGET_FOOD_COUNT; i++) this.spawnFood();
     this.interval = setInterval(() => this.tick(), TICK_RATE_MS);
@@ -105,6 +106,13 @@ class GameRoom {
   }
 
   tick() {
+    // Remove ghost players whose sockets are no longer connected
+    for (const socketId of [...this.snakes.keys()]) {
+      if (!this.isSocketConnected(socketId)) {
+        this.removePlayer(socketId);
+      }
+    }
+
     const movers = [];
     for (const snake of this.snakes.values()) {
       if (!snake.alive || snake.paused) continue;

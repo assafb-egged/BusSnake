@@ -19,6 +19,22 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
 
+  const splash = document.getElementById('splash');
+  let splashHideTimer = null;
+
+  function showSplash() {
+    if (!splash) return;
+    if (splashHideTimer) clearTimeout(splashHideTimer);
+    splash.classList.remove('show');
+    // Force reflow so the animation restarts even if shown again
+    void splash.offsetWidth;
+    splash.classList.add('show');
+    splashHideTimer = setTimeout(() => {
+      splash.classList.remove('show');
+      splashHideTimer = null;
+    }, 1000);
+  }
+
   let socket = null;
   let myId = null;
   let myColor = '#ffd93d';
@@ -62,6 +78,7 @@
       overlayDied.classList.add('hidden');
       hud.classList.remove('hidden');
       resizeCanvas();
+      showSplash();
     });
     socket.on('full', () => {
       overlayJoin.classList.add('hidden');
@@ -87,6 +104,15 @@
       socket.emit('pause', { paused: document.hidden });
     });
   }
+
+  // Disconnect cleanly when the page is closed / hidden, so the server frees the slot fast.
+  function cleanDisconnect() {
+    if (socket && socket.connected) {
+      try { socket.disconnect(); } catch (_) {}
+    }
+  }
+  window.addEventListener('pagehide', cleanDisconnect);
+  window.addEventListener('beforeunload', cleanDisconnect);
 
   function updateHud() {
     const me = state.snakes.find(s => s.id === myId);

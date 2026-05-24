@@ -11,7 +11,9 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: '*' }
+  cors: { origin: '*' },
+  pingInterval: 5000,
+  pingTimeout: 8000
 });
 
 app.use((req, res, next) => {
@@ -27,9 +29,11 @@ const rooms = new Map();
 function getOrCreateRoom(busId) {
   let room = rooms.get(busId);
   if (!room) {
-    room = new GameRoom(busId, (state) => {
-      io.to(roomChannel(busId)).emit('state', state);
-    });
+    room = new GameRoom(
+      busId,
+      (state) => io.to(roomChannel(busId)).emit('state', state),
+      (socketId) => io.sockets.sockets.has(socketId)
+    );
     rooms.set(busId, room);
     console.log(`[room] created bus=${busId}`);
   }

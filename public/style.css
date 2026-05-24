@@ -466,3 +466,52 @@ button.primary {
 }
 
 .hidden { display: none !important; }
+
+/* ===== Egged splash logo intro ===== */
+.splash {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.splash.show {
+  display: flex;
+  animation: splashFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.splash-logo {
+  width: min(58vw, 260px);
+  height: min(58vw, 260px);
+  filter: drop-shadow(0 10px 36px rgba(15, 122, 62, 0.45));
+}
+
+.splash-logo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.splash.show .splash-logo {
+  animation: logoSpin 1s cubic-bezier(0.35, 0.0, 0.25, 1) forwards;
+  transform-origin: center center;
+}
+
+@keyframes logoSpin {
+  0%   { transform: rotate(-90deg) scale(0.25); opacity: 0; }
+  18%  { transform: rotate(20deg)  scale(1.12); opacity: 1; }
+  60%  { transform: rotate(280deg) scale(1.0);  opacity: 1; }
+  82%  { transform: rotate(380deg) scale(1.05); opacity: 0.85; }
+  100% { transform: rotate(450deg) scale(0.35); opacity: 0; }
+}
+
+@keyframes splashFade {
+  0%   { opacity: 0; background-color: #ffffff; }
+  12%  { opacity: 1; background-color: #ffffff; }
+  72%  { opacity: 1; background-color: #ffffff; }
+  100% { opacity: 0; background-color: rgba(255, 255, 255, 0); }
+}
